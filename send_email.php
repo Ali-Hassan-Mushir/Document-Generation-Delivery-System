@@ -1,5 +1,8 @@
 <?php
-session_start();
+session_start([
+    'cookie_httponly' => true,
+    'cookie_samesite' => 'Lax'
+]);
 
 // --- SETUP & AUTOLOADING ---
 use PHPMailer\PHPMailer\PHPMailer;
