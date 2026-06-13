@@ -187,12 +187,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </html>";
     
     // --- 3. Generate PDF using mPDF ---
-    $mpdf = new \Mpdf\Mpdf(['tempDir' => __DIR__ . '/tmp']);
-    $mpdf->WriteHTML($htmlForPdf);
     $pdfFileName = "Elite_Fitness_Plan_" . str_replace(' ', '_', $recipientName) . ".pdf";
-    $mpdf->Output($pdfFileName, 'F'); // 'F' saves the file to the server
+    $pdfGenerated = false;
+    try {
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => __DIR__ . '/tmp']);
+        $mpdf->WriteHTML($htmlForPdf);
+        $mpdf->Output($pdfFileName, 'F'); // 'F' saves the file to the server
+        $pdfGenerated = true;
+    } catch (\Throwable $e) {
+        $outputMessage = "<h2 style='color: #FF6B6B; text-align: center;'>PDF Generation Failed</h2>
+                          <p style='color: #FF6B6B; text-align: center;'>Your plan could not be generated at this time. Please try again later.</p>";
+        if (file_exists($pdfFileName)) {
+            unlink($pdfFileName);
+        }
+    }
 
     // --- 4. Send Email with PDF Attachment using PHPMailer ---
+    if ($pdfGenerated):
     $mail = new PHPMailer(true);
     try {
         // Server settings
@@ -231,6 +242,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             unlink($pdfFileName);
         }
     }
+
+    endif; // end pdfGenerated block
 
     } // end validation-passed block
 
