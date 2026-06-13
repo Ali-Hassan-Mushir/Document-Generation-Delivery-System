@@ -234,8 +234,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                           <p style='color: #90EE90; text-align: center;'>The personalized PDF plan has been generated and sent to {$recipientEmail}.</p>";
 
     } catch (Exception $e) {
-        $outputMessage = "<h2 style='color: #FF6B6B;'>Email Could Not Be Sent</h2>
-                          <p style='color: #FF6B6B;'>Mailer Error: {$mail->ErrorInfo}</p>";
+        $outputMessage = "<h2 style='color: #FF6B6B; text-align: center;'>Email Could Not Be Sent</h2>
+                          <p style='color: #FF6B6B; text-align: center;'>Your plan could not be delivered at this time. Please try again later.</p>";
     } finally {
         // Delete the temporary PDF file from the server
         if (file_exists($pdfFileName)) {
