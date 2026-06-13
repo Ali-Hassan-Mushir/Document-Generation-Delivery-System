@@ -19,7 +19,8 @@ $outputMessage = '';
 try {
     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
     $dotenv->load();
-} catch (\Dotenv\Exception\InvalidPathException $e) {
+    $dotenv->required(['MAIL_HOST', 'MAIL_USERNAME', 'MAIL_PASSWORD', 'MAIL_PORT', 'MAIL_ENCRYPTION', 'MAIL_FROM_ADDRESS', 'MAIL_FROM_NAME']);
+} catch (\Dotenv\Exception\InvalidPathException | \Dotenv\Exception\ValidationException $e) {
     $outputMessage = "<h2 style='color: #FF6B6B; text-align: center;'>Application Configuration Error</h2>
                       <p style='color: #FF6B6B; text-align: center;'>The application is not configured correctly. Please contact the administrator.</p>";
 }
@@ -239,7 +240,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } finally {
         // Delete the temporary PDF file from the server
         if (file_exists($pdfFileName)) {
-            unlink($pdfFileName);
+            $deleted = unlink($pdfFileName);
         }
     }
 
