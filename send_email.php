@@ -12,12 +12,17 @@ use PHPMailer\PHPMailer\Exception;
 // Load Composer's autoloader for PHPMailer and mPDF
 require 'vendor/autoload.php';
 
-// Load environment variables from .env
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
-
 // This variable will hold the HTML for the success/error message
 $outputMessage = '';
+
+// Load environment variables from .env
+try {
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+    $dotenv->load();
+} catch (\Dotenv\Exception\InvalidPathException $e) {
+    $outputMessage = "<h2 style='color: #FF6B6B; text-align: center;'>Application Configuration Error</h2>
+                      <p style='color: #FF6B6B; text-align: center;'>The application is not configured correctly. Please contact the administrator.</p>";
+}
 
 // Generate a CSRF token for this session if one does not exist
 if (empty($_SESSION['csrf_token'])) {
